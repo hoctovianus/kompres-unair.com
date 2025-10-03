@@ -1,0 +1,120 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Styling Umum */
+body {
+    line-height: 1.6;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+section {
+    padding: 80px 0;
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* ... (Kode CSS lainnya tetap sama) ... */
+
+
+/* Accordion Styles -- BAGIAN YANG DIUBAH -- */
+.accordion-container {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.accordion {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.accordion-header {
+    padding: 15px 20px;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+    background-color: #2980b9;
+}
+
+.accordion-header h3 {
+    margin: 0;
+    color: white;
+}
+
+/* Styling untuk wadah ikon (+) dan (-) */
+.accordion-icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Membuat garis horizontal dan vertikal menggunakan pseudo-elements */
+.accordion-icon::before,
+.accordion-icon::after {
+    content: '';
+    position: absolute;
+    background-color: white;
+    transition: transform 0.3s ease-out;
+}
+
+/* Garis Vertikal (untuk tanda "+") */
+.accordion-icon::before {
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+}
+
+/* Garis Horizontal */
+.accordion-icon::after {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+/* Saat akordeon aktif (terbuka), ubah tanda "+" menjadi "-" */
+.accordion.active .accordion-icon::before {
+    /* Putar garis vertikal 90 derajat agar menjadi horizontal */
+    transform: translateX(-50%) rotate(90deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion.active .accordion-content {
+    max-height: 2000px;
+}
+
+/* ... (Sisa Kode CSS lainnya tetap sama) ... */
