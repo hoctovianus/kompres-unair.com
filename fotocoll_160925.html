@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Foto & GIF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 0.8rem 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow: hidden;
+            transition: max-height 0.6s ease, padding 0.6s ease;
+            max-height: 200px; /* default tinggi */
+        }
+
+        header.collapsed {
+            max-height: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        /* Tombol toggle header */
+        #toggleHeader {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.3s ease;
+        }
+        #toggleHeader:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 0.5rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0;
+            padding: 0 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            background-color: #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .filter-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .filter-btn.active {
+            background-color: #6a11cb;
+            color: white;
+        }
+
+        /* Gallery dengan full-width */
+        .gallery {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* jarak antar box */
+        }
+
+        .gallery-item {
+            width: 100%;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .image-container {
+            width: 100%;
+            aspect-ratio: 16 / 9; /* tinggi seragam */
+            position: relative;
+            overflow: hidden;
+            background-color: #f8f8f8;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .caption {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            background-color: white;
+            font-size: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .gif-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4081;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: #333;
+            color: white;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive header */
+        @media (min-width: 768px) {
+            header {
+                padding: 1rem 0;
+                max-height: 250px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .subtitle {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            header {
+                padding: 1.1rem 0;
+                max-height: 300px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            .subtitle {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <h1>Galeri Foto & GIF</h1>
+        <p class="subtitle">Koleksi visual yang menginspirasi</p>
+        <button id="toggleHeader">⬆ Sembunyikan</button>
+    </header>
+
+    <div class="container">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Semua</button>
+            <button class="filter-btn" data-filter="foto">Foto</button>
+            <button class="filter-btn" data-filter="gif">GIF</button>
+        </div>
+
+        <div class="gallery">
+            <!-- Item 1 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Pemandangan Pegunungan">
+                </div>
+                <div class="caption">Keindahan Pegunungan</div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container">
+                    <img src="https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif" alt="Animasi Bintang">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Bintang Berkelap-kelip</div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470" alt="Pemandangan Pantai">
+                </div>
+                <div class="caption">Pantai di Senja Hari</div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container">
+                    <img src="https://media.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif" alt="Animasi Hujan">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Hujan di Jendela</div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e" alt="Hutan Hijau">
+                </div>
+                <div class="caption">Kehijauan Hutan</div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container">
+                    <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Animasi Kota">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Kota di Malam Hari</div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05" alt="Kabut di Pagi Hari">
+                </div>
+                <div class="caption">Kabut Pagi</div>
+            </div>
+
+            <!-- Item 8 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container">
+                    <img src="https://media.giphy.com/media/xT0Gqn9yuw8hnPGn5K/giphy.gif" alt="Animasi Api">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Api yang Menari</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Galeri Foto & GIF. Semua hak cipta dilindungi.</p>
+    </footer>
+
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    galleryItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Header toggle animation
+            const header = document.getElementById('mainHeader');
+            const toggleBtn = document.getElementById('toggleHeader');
+            let isCollapsed = false;
+
+            toggleBtn.addEventListener('click', () => {
+                if (!isCollapsed) {
+                    header.classList.add('collapsed');
+                    toggleBtn.textContent = '⬇ Tampilkan';
+                } else {
+                    header.classList.remove('collapsed');
+                    toggleBtn.textContent = '⬆ Sembunyikan';
+                }
+                isCollapsed = !isCollapsed;
+            });
+        });
+    </script>
+</body>
+</html>
