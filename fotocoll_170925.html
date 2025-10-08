@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Foto & GIF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 0.8rem 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .main-container {
+            width: 95%;
+            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0;
+            width: 100%;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            background-color: #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .filter-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .filter-btn.active {
+            background-color: #6a11cb;
+            color: white;
+        }
+
+        .gallery {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-item {
+            width: 95%;
+            margin-bottom: 1rem;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 75%; /* Aspect ratio 4:3 default */
+            position: relative;
+            overflow: hidden;
+            background-color: #f8f8f8;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.03);
+        }
+
+        .caption {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            background-color: white;
+            font-size: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .gif-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: #ff4081;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: #333;
+            color: white;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Responsive adjustments untuk semua perangkat */
+        @media (min-width: 768px) {
+            header {
+                padding: 1rem 0;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .filter-buttons {
+                margin: 1.2rem 0;
+                gap: 0.8rem;
+            }
+            
+            .filter-btn {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.9rem;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                margin-bottom: 1.2rem;
+            }
+            
+            .image-container {
+                padding-bottom: 60%; /* Aspect ratio lebih landscape untuk tablet */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            header {
+                padding: 1.1rem 0;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .filter-buttons {
+                margin: 1.5rem 0;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                margin-bottom: 1.5rem;
+                max-width: 1400px;
+            }
+            
+            .image-container {
+                padding-bottom: 50%; /* Aspect ratio lebih lebar untuk desktop */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.7rem 0;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .filter-buttons {
+                gap: 0.4rem;
+            }
+            
+            .filter-btn {
+                padding: 0.4rem 0.9rem;
+                font-size: 0.75rem;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                margin-bottom: 0.8rem;
+            }
+            
+            .caption {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .image-container {
+                padding-bottom: 80%; /* Aspect ratio lebih portrait untuk mobile */
+            }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 0.5rem 0;
+                position: relative;
+            }
+            
+            h1 {
+                font-size: 1.1rem;
+            }
+            
+            .subtitle {
+                font-size: 0.7rem;
+            }
+            
+            .filter-buttons {
+                margin: 0.8rem 0;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                margin-bottom: 0.8rem;
+            }
+            
+            .image-container {
+                padding-bottom: 45%; /* Lebih pendek di landscape */
+            }
+        }
+
+        /* Very large screens */
+        @media (min-width: 1600px) {
+            .main-container {
+                width: 95%;
+                max-width: 95%;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                max-width: 1600px;
+            }
+            
+            .image-container {
+                padding-bottom: 45%; /* Lebih lebar di layar sangat besar */
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 1.1rem;
+            }
+            
+            .subtitle {
+                font-size: 0.7rem;
+            }
+            
+            .filter-btn {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.7rem;
+            }
+            
+            .gallery-item {
+                width: 95%;
+                margin-bottom: 0.6rem;
+            }
+            
+            .caption {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+            
+            .image-container {
+                padding-bottom: 85%; /* Lebih portrait di layar sangat kecil */
+            }
+        }
+
+        /* Medium devices optimization */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .gallery-item {
+                width: 95%;
+            }
+            
+            .image-container {
+                padding-bottom: 70%; /* Balance antara portrait dan landscape */
+            }
+        }
+
+        /* Smooth loading animation */
+        .gallery-item {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading state untuk gambar */
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            z-index: 1;
+        }
+
+        .image-container.loaded::before {
+            display: none;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Galeri Foto & GIF</h1>
+        <p class="subtitle">Koleksi visual yang menginspirasi</p>
+    </header>
+
+    <div class="main-container">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Semua</button>
+            <button class="filter-btn" data-filter="foto">Foto</button>
+            <button class="filter-btn" data-filter="gif">GIF</button>
+        </div>
+
+        <div class="gallery">
+            <!-- Item 1 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container" id="img-1">
+                    <img src="https://picsum.photos/1920/1080?random=15" alt="Pemandangan Pegunungan" onload="imageLoaded('img-1')">
+                </div>
+                <div class="caption">Keindahan Pegunungan</div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container" id="img-2">
+                    <img src="https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif" alt="Animasi Bintang" onload="imageLoaded('img-2')">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Bintang Berkelap-kelip</div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container" id="img-3">
+                    <img src="https://picsum.photos/1920/1080?random=16" alt="Pemandangan Pantai" onload="imageLoaded('img-3')">
+                </div>
+                <div class="caption">Pantai di Senja Hari</div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container" id="img-4">
+                    <img src="https://media.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif" alt="Animasi Hujan" onload="imageLoaded('img-4')">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Hujan di Jendela</div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="gallery-item" data-category="foto">
+                <div class="image-container" id="img-5">
+                    <img src="https://picsum.photos/1920/1080?random=17" alt="Hutan Hijau" onload="imageLoaded('img-5')">
+                </div>
+                <div class="caption">Kehijauan Hutan</div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="gallery-item" data-category="gif">
+                <div class="image-container" id="img-6">
+                    <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Animasi Kota" onload="imageLoaded('img-6')">
+                    <div class="gif-badge">GIF</div>
+                </div>
+                <div class="caption">Kota di Malam Hari</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Galeri Foto & GIF. Semua hak cipta dilindungi.</p>
+    </footer>
+
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Filter gallery items
+                    galleryItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
+        // Image loading indicator
+        function imageLoaded(imgId) {
+            const container = document.getElementById(imgId);
+            container.classList.add('loaded');
+        }
+
+        // Fallback untuk gambar yang error
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBub3QgYXZhaWxhYmxlPC90ZXh0Pjwvc3ZnPg==';
+                const container = this.parentElement;
+                container.classList.add('loaded');
+            });
+        });
+    </script>
+</body>
+</html>
